@@ -1,22 +1,30 @@
-// Business Rule: Evaluate whether employee clock-in distance is within the allowed geofence (threshold: 0.5 miles)
-function evaluateClockInDistance(distanceInMiles) {
-  const GEOFENCE_RADIUS = 0.5;
+// Business Rule: Evaluate employee punctuality based on scheduled start time.
+// Threshold: Clocking in more than 15 minutes late is flagged for manager review.
+function evaluateClockInTime(minutesLate) {
+  const LATE_THRESHOLD_MINUTES = 15;
 
-  if (distanceInMiles <= GEOFENCE_RADIUS) {
-    return "Approved: Within geofence";
+  if (minutesLate <= 0) {
+    return "Approved: On time or early";
+  } else if (minutesLate <= LATE_THRESHOLD_MINUTES) {
+    return "Approved: Within acceptable grace period";
   } else {
-    return "Flagged: Outside geofence, requires manager review";
+    return "Flagged: More than 15 minutes late, requires manager review";
   }
 }
 
-// --- Boundary Testing ---
-console.log("=== Testing Geofence Business Rule ===");
+// ==========================================
+// Boundary Testing (Instructor Requirement)
+// ==========================================
+console.log("=== Testing Punctuality Business Rule ===");
 
-// 1. Below threshold (Valid / Inside boundary)
-console.log("Test 0.2 miles (Inside):", evaluateClockInDistance(0.2));
+// 1. Early clock-in (Negative variance)
+console.log("Test -10 mins (Early):", evaluateClockInTime(-10));
 
-// 2. Exactly at threshold (Boundary)
-console.log("Test 0.5 miles (Boundary):", evaluateClockInDistance(0.5));
+// 2. Below threshold / Grace period
+console.log("Test 5 mins (Within grace period):", evaluateClockInTime(5));
 
-// 3. Above threshold (Invalid / Flagged)
-console.log("Test 0.8 miles (Outside):", evaluateClockInDistance(0.8));
+// 3. Exactly at the threshold (Boundary)
+console.log("Test 15 mins (Boundary):", evaluateClockInTime(15));
+
+// 4. Above threshold (Flagged)
+console.log("Test 20 mins (Late):", evaluateClockInTime(20));
