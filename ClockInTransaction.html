@@ -52,86 +52,30 @@
       <p>Please have your employee ID present, see the manager if an ID is lost or forgotten. Clock-in only yourself, do NOT clock in for another person. If flagged or rejected, please see manager.</p>
     </section>
 
-    <!--
-      This second section represents the future transaction-entry area.
+    <section id="clock-in-form-section">
+      <h2>Employee Clock-In Submission</h2>
+      <form id="clockInForm" action="#" method="POST">
 
-      In Session 1, we stop at structure.
-      In Session 2, we will place the actual <form> and controls here.
-    -->
-    <section>
-      <h2>Shift details</h2>
-<section id="clock-in-form-section">
-  <h2>Employee Clock-In Submission</h2>
-  <form id="clockInForm" action="#" method="POST">
-    
-    <!-- Employee Identification -->
-    <div class="form-group">
-      <label for="employeeId">Employee ID / Badge Number:</label>
-      <input type="text" id="employeeId" name="employeeId" placeholder="e.g., EMP-10492" required pattern="[A-Za-z0-9\-]+" />
-    </div>
+        <div class="form-group">
+          <label for="employeeId">Employee ID / Badge Number:</label>
+          <input type="text" id="employeeId" name="employeeId" placeholder="e.g., EMP-10492" required pattern="[A-Za-z0-9\-]+" />
+        </div>
 
-    <!-- Department Selection -->
-    <div class="form-group">
-      <label for="department">Department:</label>
-      <select id="department" name="department" required>
-        <option value="" disabled selected>Select Department</option>
-        <option value="operations">Operations</option>
-        <option value="sales">Sales</option>
-        <option value="customer_service">Customer Service</option>
-        <option value="logistics">Logistics / Warehouse</option>
-        <option value="management">Management</option>
-      </select>
-    </div>
+        <!-- Filled automatically when the employee ID is submitted -->
+        <div class="form-group">
+          <label for="timestamp">Transaction Timestamp:</label>
+          <input type="datetime-local" id="timestamp" name="timestamp" step="1" readonly />
+        </div>
 
-    <!-- Location / Worksite -->
-    <div class="form-group">
-      <label for="worksiteId">Worksite / Terminal ID:</label>
-      <select id="worksiteId" name="worksiteId" required>
-        <option value="" disabled selected>Select Location</option>
-        <option value="site_houston_hq">Main Office / HQ</option>
-        <option value="site_branch_north">North Branch Terminal</option>
-        <option value="site_warehouse_1">Distribution Center 1</option>
-        <option value="remote">Remote / Field Check-In</option>
-      </select>
-    </div>
+        <div class="form-actions">
+          <button type="submit">Submit Clock-In</button>
+          <button type="reset">Clear Form</button>
+        </div>
 
-    <!-- Transaction Type -->
-    <div class="form-group">
-      <label for="transactionType">Action Type:</label>
-      <select id="transactionType" name="transactionType" required>
-        <option value="clock_in">Clock In (Shift Start)</option>
-        <option value="meal_break_start">Meal Break - Start</option>
-        <option value="meal_break_end">Meal Break - End</option>
-        <option value="clock_out">Clock Out (Shift End)</option>
-      </select>
-    </div>
+        <p id="clockInStatus" hidden></p>
 
-    <!-- Timestamp -->
-    <div class="form-group">
-      <label for="timestamp">Transaction Timestamp:</label>
-      <input type="datetime-local" id="timestamp" name="timestamp" required />
-    </div>
-
-    <!-- Shift Code / Scheduled Shift -->
-    <div class="form-group">
-      <label for="shiftCode">Assigned Shift Code (Optional):</label>
-      <input type="text" id="shiftCode" name="shiftCode" placeholder="e.g., SHIFT-MORN-0800" />
-    </div>
-
-    <!-- Override / Exception Notes for Flagged Events -->
-    <div class="form-group">
-      <label for="overrideNotes">Exception / Late Clock-In Reason (If Applicable):</label>
-      <textarea id="overrideNotes" name="overrideNotes" rows="3" placeholder="Explain any deviations, late arrivals, or site reassignments..."></textarea>
-    </div>
-
-    <!-- Submission Controls -->
-    <div class="form-actions">
-      <button type="submit">Submit Clock-In</button>
-      <button type="reset">Clear Form</button>
-    </div>
-
-  </form>
-</section>
+      </form>
+    </section>
 
   </main>
 

@@ -131,6 +131,11 @@ textarea:focus {
   border-color: var(--navy);
 }
 
+input[readonly] {
+  background: #eef3f8;
+  color: var(--navy);
+}
+
 .form-actions {
   display: flex;
   flex-wrap: wrap;

@@ -28,3 +28,52 @@ console.log("Test 15 mins (Boundary):", evaluateClockInTime(15));
 
 // 4. Above threshold (Flagged)
 console.log("Test 20 mins (Late):", evaluateClockInTime(20));
+
+// Business rule: the employee does not enter a time.
+// Submitting an employee ID records the transaction timestamp from the current clock.
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("clockInForm");
+  const employeeId = document.getElementById("employeeId");
+  const timestamp = document.getElementById("timestamp");
+  const status = document.getElementById("clockInStatus");
+
+  if (!form || !employeeId || !timestamp) {
+    return;
+  }
+
+  function formatLocalDateTime(date) {
+    const pad = (value) => String(value).padStart(2, "0");
+    return [
+      date.getFullYear(),
+      pad(date.getMonth() + 1),
+      pad(date.getDate())
+    ].join("-") + "T" + [
+      pad(date.getHours()),
+      pad(date.getMinutes()),
+      pad(date.getSeconds())
+    ].join(":");
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const id = employeeId.value.trim();
+    if (!id) {
+      return;
+    }
+
+    timestamp.value = formatLocalDateTime(new Date());
+
+    if (status) {
+      status.hidden = false;
+      status.textContent = "Clock-in recorded for " + id + " at " + timestamp.value.replace("T", " ") + ".";
+    }
+  });
+
+  form.addEventListener("reset", () => {
+    if (status) {
+      status.hidden = true;
+      status.textContent = "";
+    }
+  });
+});
