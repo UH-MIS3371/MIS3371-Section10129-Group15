@@ -2,15 +2,9 @@
 <html lang="en">
 <head>
   <!--
-    WEEK 4 — SESSION 1 LIVE DEMO
-    Goal: move from Week 3 transaction design to a clean semantic HTML page.
-
-    Teaching focus:
-    1. Basic HTML document structure
-    2. Elements + nesting
-    3. Semantic HTML
-    4. Attributes
-    5. Edit → Save → Refresh → Verify
+    HALL Clock-In System
+    MIS 3371 Group Project
+    Field names (id/name) match docs/data-dictionary.docx
   -->
 
   <meta charset="UTF-8">
@@ -19,34 +13,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Appears in the browser tab -->
-  <title>Clock-in Transaction
-  </title>
+  <title>HALL Clock-In</title>
 
   <!-- Loads the page styles from the external stylesheet -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- defer: run app.js after the HTML has finished loading -->
+  <script src="app.js" defer></script>
 </head>
 
 <body>
 
-  <!--
-    <header> = introductory area of the page.
-    It communicates the purpose of the page.
-  -->
   <header>
     <h1>Clock In</h1>
     <p>Please submit Employee ID to clock in.</p>
   </header>
 
-  <!--
-    <main> = the primary content of this page.
-    A page should normally have one main content region.
-  -->
   <main>
 
-    <!--
-      <section> groups related content.
-      This first section gives instructions before the transaction form.
-    -->
     <section>
       <h2>Before You Submit</h2>
       <p>Please have your employee ID present, see the manager if an ID is lost or forgotten. Clock-in only yourself, do NOT clock in for another person. If flagged or rejected, please see manager.</p>
@@ -56,15 +40,16 @@
       <h2>Employee Clock-In Submission</h2>
       <form id="clockInForm" action="#" method="POST">
 
+        <!-- employeeId: user-entered (data dictionary) -->
         <div class="form-group">
           <label for="employeeId">Employee ID / Badge Number:</label>
           <input type="text" id="employeeId" name="employeeId" placeholder="e.g., EMP-10492" required pattern="[A-Za-z0-9\-]+" />
         </div>
 
-        <!-- Filled automatically when the employee ID is submitted -->
+        <!-- clockInTimestamp: system-assigned, filled automatically on submit -->
         <div class="form-group">
-          <label for="timestamp">Transaction Timestamp:</label>
-          <input type="datetime-local" id="timestamp" name="timestamp" step="1" readonly />
+          <label for="clockInTimestamp">Clock-In Timestamp:</label>
+          <input type="datetime-local" id="clockInTimestamp" name="clockInTimestamp" step="1" readonly />
         </div>
 
         <div class="form-actions">
@@ -72,28 +57,27 @@
           <button type="reset">Clear Form</button>
         </div>
 
-        <p id="clockInStatus" hidden></p>
+        <p id="clockInStatus" aria-live="polite" hidden></p>
 
       </form>
     </section>
 
+    <!--
+      Week 6 test input. In production, minutesFromShiftStart is
+      calculated by the system (derived), not entered by the employee.
+    -->
     <section id="punctuality-check-section">
       <h2>Punctuality Check (Test Input)</h2>
-      <label for="minutesLate">Minutes from scheduled shift start (negative = early):</label>
-      <input type="number" id="minutesLate" step="1" />
+      <label for="minutesFromShiftStart">Minutes from scheduled shift start (negative = early, positive = late):</label>
+      <input type="number" id="minutesFromShiftStart" name="minutesFromShiftStart" step="1" />
       <p id="punctualityMessage" aria-live="polite"></p>
     </section>
-    
+
   </main>
 
-  <!--
-    <footer> = supporting or closing information.
-    It is not the main transaction content.
-  -->
   <footer>
-    <p>MIS 3371 — Week 4 Live Demo</p>
+    <p>HALL Clock-In System, MIS 3371 Group 15</p>
   </footer>
 
-    <script src="app.js"></script>
-  </body>
+</body>
 </html>
