@@ -4,9 +4,9 @@ function evaluateClockInTime(minutesLate) {
   const LATE_THRESHOLD_MINUTES = 15;
 
   if (minutesLate <= 0) {
-    return "Approved: On time or early";
+    return "Accepted: On time or early";
   } else if (minutesLate <= LATE_THRESHOLD_MINUTES) {
-    return "Approved: Within acceptable grace period";
+    return "Accepted: Within acceptable grace period";
   } else {
     return "Flagged: More than 15 minutes late, requires manager review";
   }
@@ -36,6 +36,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const employeeId = document.getElementById("employeeId");
   const timestamp = document.getElementById("timestamp");
   const status = document.getElementById("clockInStatus");
+  const minutesInput = document.querySelector("#minutesLate");
+const punctualityMessage = document.querySelector("#punctualityMessage");
+
+if (minutesInput && punctualityMessage) {
+  minutesInput.addEventListener("input", () => {
+    const raw = minutesInput.value;
+    if (raw === "") {
+      punctualityMessage.textContent = "";
+      return;
+    }
+    punctualityMessage.textContent = evaluateClockInTime(Number(raw));
+  });
+}
 
   if (!form || !employeeId || !timestamp) {
     return;
