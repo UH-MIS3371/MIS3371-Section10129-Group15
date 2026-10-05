@@ -1,5 +1,5 @@
 # MIS3371Transaction
-Transaction project for MIS3371
+Clock-In Transaction for MIS3371
 
 Scenario - 
 Employees need a reliable way to clock in and confirm their submission was received and processed. Managers need visibility into any flagged or rejected clock-ins so they can investigate and take action. This project models that workflow as a transaction processing system, where a clock-in request moves from submission, through automated evaluation, to manager review if needed.
