@@ -1,4 +1,4 @@
-# HALL Clock-In System: Data Dictionary
+# HALLE Clock-In System: Data Dictionary
 
 This data dictionary defines the data fields used to submit, validate, and resolve an employee clock-in request, from submission through manager review.
 
