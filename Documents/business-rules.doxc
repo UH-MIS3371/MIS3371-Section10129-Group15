@@ -1,5 +1,5 @@
 BR-1: Timeclock actions must come from an active employee
-BR-2: Employees must have a shift scheduled for the current date and time to submit a clock-in request. Clocking-in to a shif that does not exist will cause the request to be Rejected
+BR-2: Employees must have a shift scheduled for the current date and time to submit a clock-in request. Clocking in to a shift that does not exist will cause the request to be Rejected
 BR-3: A clock-in submitted more than 15 minutes before the scheduled shift start shall be flagged for manager review.
 BR-4: A clock-in submitted more than 15 minutes after the scheduled shift start shall be flagged for manager review.
 BR-5: An employee who is already clocked-in, cannot clock-in again to prevent duplicates. This will cause the clock-in request to be flagged.
