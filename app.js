@@ -1,94 +1,204 @@
-// ==========================================
-// Business Rule: Clock-in timing window
-// A clock-in more than 15 minutes early or more than 15 minutes late
-// is Flagged for manager review. Otherwise it is Accepted.
-// minutesFromShiftStart: negative = early, positive = late (data dictionary)
-// ==========================================
-const EARLY_THRESHOLD_MINUTES = 15;
-const LATE_THRESHOLD_MINUTES = 15;
+// HALLE Clock-In System - Milestone 2 client-side JavaScript
+const CLOCK_IN_WINDOW_MINUTES = 15;
 
+// Employee IDs may contain letters, numbers, and hyphens only.
+function isEmployeeIdValid(id) {
+  return /^[A-Za-z0-9-]+$/.test(String(id).trim());
+}
+
+// Negative minutes = early; positive minutes = late.
+function isWithinClockInWindow(minutesFromShiftStart) {
+  return Number.isInteger(minutesFromShiftStart) &&
+    Math.abs(minutesFromShiftStart) <= CLOCK_IN_WINDOW_MINUTES;
+}
+
+// Rule 3: Demonstrates when a clock-in should be Rejected.
+// Actual employment and schedule checks happen in the backend.
+function isClockInRejected(employmentStatus, hasScheduledShift) {
+  return employmentStatus !== "Active" || hasScheduledShift === false;
+}
+
+// This rule is demonstrated with the Week 6 test input, not a real schedule.
 function evaluateClockInTime(minutesFromShiftStart) {
-  if (minutesFromShiftStart < -EARLY_THRESHOLD_MINUTES) {
-    return "Flagged: More than 15 minutes early, requires manager review";
-  } else if (minutesFromShiftStart <= 0) {
-    return "Accepted: On time or within early window";
-  } else if (minutesFromShiftStart <= LATE_THRESHOLD_MINUTES) {
-    return "Accepted: Within acceptable grace period";
-  } else {
-    return "Flagged: More than 15 minutes late, requires manager review";
+  if (!Number.isInteger(minutesFromShiftStart)) {
+    return "Invalid input: Enter a whole number of minutes and try again.";
   }
+
+  if (!isWithinClockInWindow(minutesFromShiftStart)) {
+    const direction = minutesFromShiftStart < 0 ? "early" : "late";
+
+    return "Flagged: Clock-in more than 15 minutes " + direction +
+      ". Please speak to your manager.";
+  }
+
+  return "Accepted: Clock-in is within the 15-minute window.";
 }
 
 // ==========================================
-// Boundary Testing (Instructor Requirement)
+// Boundary Testing
 // ==========================================
-console.log("=== Testing Clock-In Timing Rule ===");
-console.log("Test -16 mins (Too early):", evaluateClockInTime(-16));
-console.log("Test -15 mins (Early boundary):", evaluateClockInTime(-15));
-console.log("Test 0 mins (On time):", evaluateClockInTime(0));
-console.log("Test 15 mins (Late boundary):", evaluateClockInTime(15));
-console.log("Test 16 mins (Too late):", evaluateClockInTime(16));
+
+const timingTests = [
+  { minutes: -16, expected: "Flagged" },
+  { minutes: -15, expected: "Accepted" },
+  { minutes: -14, expected: "Accepted" },
+  { minutes: 14, expected: "Accepted" },
+  { minutes: 15, expected: "Accepted" },
+  { minutes: 16, expected: "Flagged" }
+];
+
+for (const test of timingTests) {
+  const actual = evaluateClockInTime(test.minutes).split(":")[0];
+
+  console.log("Timing test " + test.minutes + " minutes: " +
+    (actual === test.expected ? "PASS" : "FAIL") +
+    " (expected " + test.expected + ", actual " + actual + ")");
+}
 
 // ==========================================
-// Page behavior
+// Rejected Business Rule Tests
 // ==========================================
-document.addEventListener("DOMContentLoaded", () => {
 
-  // ---- Week 6: connect the timing rule to the page ----
-  const minutesInput = document.querySelector("#minutesFromShiftStart");
-  const punctualityMessage = document.querySelector("#punctualityMessage");
+const rejectionTests = [
+  {
+    name: "Inactive employee",
+    employmentStatus: "Inactive",
+    hasScheduledShift: true,
+    expected: "Rejected"
+  },
+  {
+    name: "Employee without scheduled shift",
+    employmentStatus: "Active",
+    hasScheduledShift: false,
+    expected: "Rejected"
+  }
+];
 
-  if (minutesInput && punctualityMessage) {
-    minutesInput.addEventListener("input", () => {
-      const raw = minutesInput.value;
-      if (raw === "") {
-        punctualityMessage.textContent = "";
-        return;
-      }
-      punctualityMessage.textContent = evaluateClockInTime(Number(raw));
-    });
+for (const test of rejectionTests) {
+  const actual = isClockInRejected(
+    test.employmentStatus,
+    test.hasScheduledShift
+  ) ? "Rejected" : "Not Rejected";
+
+  console.log(test.name + ": " +
+    (actual === test.expected ? "PASS" : "FAIL") +
+    " (expected " + test.expected + ", actual " + actual + ")");
+}
+
+// ==========================================
+// Page Behavior
+// ==========================================
+
+// The HTML loads this script with defer.
+const form = document.querySelector("#clockInForm");
+const employeeId = document.querySelector("#employeeId");
+const clockInTimestamp = document.querySelector("#clockInTimestamp");
+const clockInStatus = document.querySelector("#clockInStatus");
+const minutesInput = document.querySelector("#minutesFromShiftStart");
+const punctualityMessage = document.querySelector("#punctualityMessage");
+
+// Displays the clock-in status message.
+function showStatus(message) {
+  if (clockInStatus) {
+    clockInStatus.hidden = false;
+    clockInStatus.textContent = message;
+  }
+}
+
+// Formats the system date and time.
+function formatLocalDateTime(date) {
+  const pad = (value) => String(value).padStart(2, "0");
+
+  return date.getFullYear() + "-" +
+    pad(date.getMonth() + 1) + "-" +
+    pad(date.getDate()) + "T" +
+    pad(date.getHours()) + ":" +
+    pad(date.getMinutes()) + ":" +
+    pad(date.getSeconds());
+}
+
+// ==========================================
+// Employee ID Live Validation
+// ==========================================
+
+if (employeeId) {
+  employeeId.addEventListener("input", () => {
+    const id = employeeId.value.trim();
+
+      // Clear the previous timestamp if the employee ID changes.
+  if (clockInTimestamp) {
+    clockInTimestamp.value = "";
   }
 
-  // ---- Clock-in submission ----
-  // Business rule: the employee does not enter a time.
-  // Submitting an employee ID records clockInTimestamp from the system clock.
-  const form = document.querySelector("#clockInForm");
-  const employeeId = document.querySelector("#employeeId");
-  const clockInTimestamp = document.querySelector("#clockInTimestamp");
-  const clockInStatus = document.querySelector("#clockInStatus");
+    if (!id) {
+      showStatus("Employee ID is required. Enter your badge number.");
+    } else if (!isEmployeeIdValid(id)) {
+      showStatus("Invalid input: Use only letters, numbers, and hyphens in your Employee ID.");
+    } else if (clockInStatus) {
+      clockInStatus.hidden = true;
+      clockInStatus.textContent = "";
+    }
+  });
+}
 
-  if (!form || !employeeId || !clockInTimestamp) {
-    return;
+// ==========================================
+// Punctuality Check (Test Input)
+// ==========================================
+
+if (minutesInput && punctualityMessage) {
+
+  function updatePunctualityFeedback() {
+    const raw = minutesInput.value.trim();
+
+    if (raw === "") {
+      punctualityMessage.textContent = "";
+      return;
+    }
+
+    punctualityMessage.textContent =
+      evaluateClockInTime(Number(raw));
   }
 
-  function formatLocalDateTime(date) {
-    const pad = (value) => String(value).padStart(2, "0");
-    return [
-      date.getFullYear(),
-      pad(date.getMonth() + 1),
-      pad(date.getDate())
-    ].join("-") + "T" + [
-      pad(date.getHours()),
-      pad(date.getMinutes()),
-      pad(date.getSeconds())
-    ].join(":");
-  }
+  minutesInput.addEventListener("input", updatePunctualityFeedback);
+  minutesInput.addEventListener("change", updatePunctualityFeedback);
+}
+
+// ==========================================
+// Clock-In Form Submission
+// ==========================================
+
+if (form && employeeId && clockInTimestamp) {
+
+  // Allows JavaScript to show validation messages.
+  form.noValidate = true;
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
 
     const id = employeeId.value.trim();
-    if (!id) {
+
+    // Reject invalid employee ID input.
+    if (!isEmployeeIdValid(id)) {
+      clockInTimestamp.value = "";
+
+      showStatus(id === ""
+        ? "Invalid input: Employee ID is required. Enter your badge number and try again."
+        : "Invalid input: Employee ID may contain only letters, numbers, and hyphens. Correct it and try again.");
+
       return;
     }
 
+    // Generate clock-in timestamp from the system clock.
     clockInTimestamp.value = formatLocalDateTime(new Date());
 
-    if (clockInStatus) {
-      clockInStatus.hidden = false;
-      clockInStatus.textContent = "Clock-in submitted for " + id + " at " + clockInTimestamp.value.replace("T", " ") + ".";
-    }
+    showStatus("Submitted: Clock-in request for " + id + " at " +
+      clockInTimestamp.value.replace("T", " ") +
+      ". Employment and schedule checks are pending; this is a client-side demonstration only.");
   });
+
+  // ==========================================
+  // Reset Form
+  // ==========================================
 
   form.addEventListener("reset", () => {
     if (clockInStatus) {
@@ -96,4 +206,4 @@ document.addEventListener("DOMContentLoaded", () => {
       clockInStatus.textContent = "";
     }
   });
-});
+}
