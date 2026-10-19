@@ -252,3 +252,13 @@ section {
   }
 }
 
+.status-submitted {
+  background: #eef3f8;
+  border-color: var(--navy);
+  color: var(--navy);
+}
+
+[hidden]{
+  display: none !important;
+}
+
