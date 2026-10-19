@@ -38,34 +38,87 @@
 
     <section id="clock-in-form-section">
       <h2>Employee Clock-In Submission</h2>
+
+      <!--
+        One form = one clock-in request.
+        Every id and name below matches the data dictionary field name.
+        Each label's "for" matches its input's "id" so screen readers
+        and mouse clicks connect the label to the right control.
+      -->
       <form id="clockInForm" action="#" method="POST">
 
-        <!-- Responsive flexbox row for two form fields -->
-        <div class="form-row">
+        <!-- fieldset groups related controls; legend names the group -->
+        <fieldset>
+          <legend>Clock-In Details</legend>
 
-        <!-- Employee ID -->
-        <div class="form-group">
-          <label for="employeeId">Employee ID / Badge Number:</label>
-          <input type="text" id="employeeId" name="employeeId" placeholder="e.g., EMP-10492" required pattern="[A-Za-z0-9\-]+" />
-        </div>
+          <!--
+            employeeId: user-entered (data dictionary).
+            Native constraints: required + pattern (letters, numbers,
+            hyphens only). Matching an existing employee record is a
+            business rule, so it is NOT checked here.
+          -->
+          <div class="form-group">
+            <label for="employeeId">Employee ID / Badge Number:</label>
+            <input type="text" id="employeeId" name="employeeId" placeholder="e.g., EMP-10492" required pattern="[A-Za-z0-9\-]+" />
+          </div>
 
-        <!-- Clock-In Timestamp -->
-        <div class="form-group">
-          <label for="clockInTimestamp">Clock-In Timestamp:</label>
-          <input 
-            type="datetime-local" 
-            id="clockInTimestamp" 
-            name="clockInTimestamp" 
-            step="1" 
-            readonly 
-            />
-        </div>
+          <!--
+            scheduledShiftDate: type="date" gives a date picker.
+            In production this is DERIVED from the employee's schedule
+            record; here it is an input so the form can be tested.
+            Whether a shift exists on this date is a business rule
+            (BR-6), so there is no min or max.
+          -->
+          <div class="form-group">
+            <label for="scheduledShiftDate">Scheduled Shift Date:</label>
+            <input type="date" id="scheduledShiftDate" name="scheduledShiftDate" required />
+          </div>
+
+          <!--
+            scheduledShiftStart: type="time" gives a time picker.
+            Also derived in production (from the assigned shift).
+            No min or max: the 15-minute early/late window is a business
+            rule that JavaScript and the application tier enforce.
+          -->
+          <div class="form-group">
+            <label for="scheduledShiftStart">Scheduled Shift Start:</label>
+            <input type="time" id="scheduledShiftStart" name="scheduledShiftStart" required />
+          </div>
+
+          <!--
+            clockInTimestamp: the clock-in time. System-assigned, so it is
+            readonly and filled automatically on submit (JavaScript).
+            The employee cannot type or change it.
+            Note: browsers skip validation for readonly inputs, so
+            "required" would have no effect here.
+          -->
+          <div class="form-group">
+            <label for="clockInTimestamp">Clock-In Timestamp:</label>
+            <input type="datetime-local" id="clockInTimestamp" name="clockInTimestamp" step="1" readonly />
+          </div>
+
+          <!--
+            timeMessage: intentionally empty. The JavaScript person fills
+            it with the early/late result. aria-live="polite" makes screen
+            readers announce the text when it changes.
+          -->
+          <p id="timeMessage" aria-live="polite"></p>
+
+        </fieldset>
 
         <div class="form-actions">
           <button type="submit">Submit Clock-In</button>
           <button type="reset">Clear Form</button>
         </div>
 
+        <!--
+          formMessage: intentionally empty. The JavaScript person fills
+          it with the overall form result (for example, an error or a
+          confirmation after submit).
+        -->
+        <p id="formMessage" aria-live="polite"></p>
+
+        <!-- clockInStatus: kept from Week 6; hidden until JavaScript shows it -->
         <p id="clockInStatus" aria-live="polite" hidden></p>
 
       </form>
