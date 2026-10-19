@@ -97,12 +97,32 @@ const clockInStatus = document.querySelector("#clockInStatus");
 const minutesInput = document.querySelector("#minutesFromShiftStart");
 const punctualityMessage = document.querySelector("#punctualityMessage");
 
-// Displays the clock-in status message.
+/* Displays status messages with appropriate styling */
 function showStatus(message) {
-  if (clockInStatus) {
-    clockInStatus.hidden = false;
-    clockInStatus.textContent = message;
+  if (!clockInStatus) return;
+
+ clockInStatus.textContent = message;
+
+  clockInStatus.classList.remove(
+    "status-success",
+    "status-flagged",
+    "status-rejected"
+  );
+
+  clockInStatus.classList.add("status-message");
+
+  if (message.startsWith("Accepted:")) {
+    clockInStatus.classList.add("status-success");
+  } else if (message.startsWith("Flagged:")) {
+    clockInStatus.classList.add("status-flagged");
+  } else if (
+    message.startsWith("Rejected:") ||
+    message.startsWith("Invalid input:")
+  ) {
+    clockInStatus.classList.add("status-rejected");
   }
+
+  clockInStatus.hidden = false;
 }
 
 // Formats the system date and time.
@@ -152,11 +172,30 @@ if (minutesInput && punctualityMessage) {
 
     if (raw === "") {
       punctualityMessage.textContent = "";
+      punctualityMessage.className = "";
       return;
     }
+    
+const message = evaluateClockInTime(Number(raw));
+    
+punctualityMessage.textContent = message;
 
-    punctualityMessage.textContent =
-      evaluateClockInTime(Number(raw));
+punctualityMessage.classList.remove(
+  "status-success",
+  "status-flagged",
+  "status-rejected"
+);
+
+punctualityMessage.classList.add("status-message");
+
+if (message.startsWith("Accepted:")) {
+  punctualityMessage.classList.add("status-success");
+} else if (message.startsWith("Flagged:")) {
+  punctualityMessage.classList.add("status-flagged");
+} else {
+  punctualityMessage.classList.add("status-rejected");
+}
+    
   }
 
   minutesInput.addEventListener("input", updatePunctualityFeedback);
