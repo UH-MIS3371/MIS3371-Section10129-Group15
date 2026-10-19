@@ -40,16 +40,25 @@
       <h2>Employee Clock-In Submission</h2>
       <form id="clockInForm" action="#" method="POST">
 
-        <!-- employeeId: user-entered (data dictionary) -->
+        <!-- Responsive flexbox row for two form fields -->
+        <div class="form-row">
+
+        <!-- Employee ID -->
         <div class="form-group">
           <label for="employeeId">Employee ID / Badge Number:</label>
           <input type="text" id="employeeId" name="employeeId" placeholder="e.g., EMP-10492" required pattern="[A-Za-z0-9\-]+" />
         </div>
 
-        <!-- clockInTimestamp: system-assigned, filled automatically on submit -->
+        <!-- Clock-In Timestamp -->
         <div class="form-group">
           <label for="clockInTimestamp">Clock-In Timestamp:</label>
-          <input type="datetime-local" id="clockInTimestamp" name="clockInTimestamp" step="1" readonly />
+          <input 
+            type="datetime-local" 
+            id="clockInTimestamp" 
+            name="clockInTimestamp" 
+            step="1" 
+            readonly 
+            />
         </div>
 
         <div class="form-actions">
