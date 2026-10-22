@@ -27,6 +27,8 @@ This data dictionary defines the data fields used to submit, validate, and resol
 
 - **Authoritative rules:** Employment status, shift matching, duplicate detection, and the 15-minute timing window are enforced in the application tier, not only in the browser.
 
+- **Work location:** The employee selects where they are working when submitting a clock-in request. This is a user-entered field and does not verify the employee's physical location.
+
 - **Audit requirement:** Every Flagged or Rejected request must record reviewedBy, managerDecision, resolutionNote, and resolvedAt before it can move to Resolved.
 
 - **Timestamps:** clockInTimestamp and resolvedAt come only from the system clock so records cannot be backdated.
