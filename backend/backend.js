@@ -6,6 +6,30 @@
 // Business rule value kept in one named constant (no "magic numbers").
 const CLOCK_IN_WINDOW_MINUTES = 15;
 
+// Employee ID may contain letters, numbers, and hyphens only.
+function isEmployeeIdFormatValid(employeeId) {
+  return /^[A-Za-z0-9-]+$/.test(employeeId);
+}
+
+// Scheduled shift date must be YYYY-MM-DD.
+function isShiftDateValid(dateString) {
+  const text = String(dateString || "").trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(text)) return false;
+
+  const parts = text.split("-");
+  const year = Number(parts[0]);
+  const month = Number(parts[1]);
+  const day = Number(parts[2]);
+  if (!Number.isInteger(year) || !Number.isInteger(month) || !Number.isInteger(day)) {
+    return false;
+  }
+
+  const date = new Date(year, month - 1, day);
+  return date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day;
+}
+
 // Converts a 24-hour time string like "08:04" into minutes after midnight.
 // Returns NaN if the text is not a valid time.
 function timeToMinutes(timeString) {
@@ -44,6 +68,22 @@ function processClockIn(request) {
   if (!employeeId) {
     return buildResult("Rejected", "Employee ID is required", "Employee ID is required.", null);
   }
+  if (!isEmployeeIdFormatValid(employeeId)) {
+    return buildResult(
+      "Rejected",
+      "Employee ID format is invalid",
+      "Employee ID may contain only letters, numbers, and hyphens.",
+      null
+    );
+  }
+  if (!isShiftDateValid(request.scheduledShiftDate)) {
+    return buildResult(
+      "Rejected",
+      "Scheduled shift date is missing or invalid",
+      "Enter a valid scheduled shift date (YYYY-MM-DD).",
+      null
+    );
+  }
   if (Number.isNaN(shiftStart) || Number.isNaN(clockIn)) {
     return buildResult("Rejected", "Shift start or clock-in time is invalid", "Enter valid times.", null);
   }
@@ -57,12 +97,28 @@ function processClockIn(request) {
     return buildResult("Rejected", "Employee is not active", "Only active employees can clock in.", minutesFromShiftStart);
   }
 
-  // Rule 3: an open clock-in would create a duplicate, so Rejected.
-  if (request.hasOpenClockIn === true) {
-    return buildResult("Rejected", "Employee already has an open clock-in", "You already have an open clock-in.", minutesFromShiftStart);
+  // Rule 3: no matching scheduled shift means Rejected.
+  // hasScheduledShift is a local boolean for demonstration (no database lookup).
+  if (request.hasScheduledShift !== true) {
+    return buildResult(
+      "Rejected",
+      "Employee does not have a scheduled shift",
+      "No scheduled shift was found for this employee.",
+      minutesFromShiftStart
+    );
   }
 
-  // Rule 4: more than 15 minutes early or late is Flagged for manager review.
+  // Rule 4: an open clock-in would create a duplicate, so Flagged (BR-5).
+  if (request.hasOpenClockIn === true) {
+    return buildResult(
+      "Flagged",
+      "Employee already has an open clock-in",
+      "You already have an open clock-in.",
+      minutesFromShiftStart
+    );
+  }
+
+  // Rule 5: more than 15 minutes early or late is Flagged for manager review.
   // Exactly 15 minutes is allowed because the rule says "more than".
   if (Math.abs(minutesFromShiftStart) > CLOCK_IN_WINDOW_MINUTES) {
     const direction = minutesFromShiftStart < 0 ? "early" : "late";

@@ -53,13 +53,30 @@
 
           <!--
             employeeId: user-entered (data dictionary).
-            Native constraints: required + pattern (letters, numbers,
-            hyphens only). Matching an existing employee record is a
-            business rule, so it is NOT checked here.
+            Native constraints: required + pattern (EMP- then numbers).
+            Matching an existing employee record is a business rule,
+            so it is NOT checked here.
           -->
           <div class="form-group">
             <label for="employeeId">Employee ID / Badge Number:</label>
-            <input type="text" id="employeeId" name="employeeId" placeholder="e.g., EMP-10492" required pattern="[A-Za-z0-9\-]+" />
+            <input type="text" id="employeeId" name="employeeId" placeholder="e.g., EMP-10492" required pattern="EMP-[0-9]+" inputmode="numeric" />
+          </div>
+
+          <!--
+            workLocation: user-entered demonstration field.
+            Employees choose where they are working for this clock-in.
+            No GPS, geofencing, or backend location check in this milestone.
+          -->
+          <div class="form-group">
+            <label for="workLocation">Work Location:</label>
+            <select id="workLocation" name="workLocation" required>
+              <option value="" selected>Select your work location</option>
+              <option value="Home / Remote">Home / Remote</option>
+              <option value="Office">Office</option>
+              <option value="Warehouse">Warehouse</option>
+              <option value="On-Site / Field Location">On-Site / Field Location</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
 
           <!--

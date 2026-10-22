@@ -12,6 +12,7 @@ const baseRequest = {
   scheduledShiftDate: "2026-09-15",
   scheduledShiftStart: "08:00",
   clockInTime: "08:04",
+  hasScheduledShift: true,
   hasOpenClockIn: false
 };
 
@@ -31,7 +32,7 @@ const tests = [
     expectedStatus: "Accepted"
   },
 
-  // INVALID cases (Rejected)
+  // INVALID cases (Rejected / Flagged)
   {
     name: "Invalid: inactive employee",
     type: "invalid",
@@ -42,7 +43,7 @@ const tests = [
     name: "Invalid: open clock-in already exists",
     type: "invalid",
     request: { ...baseRequest, hasOpenClockIn: true },
-    expectedStatus: "Rejected"
+    expectedStatus: "Flagged"
   },
   {
     name: "Invalid: missing employee ID",
@@ -50,8 +51,56 @@ const tests = [
     request: { ...baseRequest, employeeId: "" },
     expectedStatus: "Rejected"
   },
+  {
+    name: "Invalid: employee ID with special characters",
+    type: "invalid",
+    request: { ...baseRequest, employeeId: "EMP-10492!" },
+    expectedStatus: "Rejected"
+  },
+  {
+    name: "Invalid: employee ID with spaces",
+    type: "invalid",
+    request: { ...baseRequest, employeeId: "EMP 10492" },
+    expectedStatus: "Rejected"
+  },
+  {
+    name: "Invalid: missing scheduled shift",
+    type: "invalid",
+    request: { ...baseRequest, hasScheduledShift: false },
+    expectedStatus: "Rejected"
+  },
+  {
+    name: "Invalid: missing scheduled shift date",
+    type: "invalid",
+    request: { ...baseRequest, scheduledShiftDate: "" },
+    expectedStatus: "Rejected"
+  },
+  {
+    name: "Invalid: invalid scheduled shift date",
+    type: "invalid",
+    request: { ...baseRequest, scheduledShiftDate: "09-15-2026" },
+    expectedStatus: "Rejected"
+  },
+  {
+    name: "Invalid: invalid shift start time",
+    type: "invalid",
+    request: { ...baseRequest, scheduledShiftStart: "25:00" },
+    expectedStatus: "Rejected"
+  },
+  {
+    name: "Invalid: invalid clock-in time",
+    type: "invalid",
+    request: { ...baseRequest, clockInTime: "8:xx" },
+    expectedStatus: "Rejected"
+  },
 
   // BOUNDARY cases (around the 15 minute window)
+  {
+    name: "Boundary: 14 min late",
+    type: "boundary",
+    request: { ...baseRequest, clockInTime: "08:14" },
+    expectedStatus: "Accepted"
+  },
   {
     name: "Boundary: exactly 15 min late",
     type: "boundary",
@@ -63,6 +112,12 @@ const tests = [
     type: "boundary",
     request: { ...baseRequest, clockInTime: "08:16" },
     expectedStatus: "Flagged"
+  },
+  {
+    name: "Boundary: 14 min early",
+    type: "boundary",
+    request: { ...baseRequest, clockInTime: "07:46" },
+    expectedStatus: "Accepted"
   },
   {
     name: "Boundary: exactly 15 min early",

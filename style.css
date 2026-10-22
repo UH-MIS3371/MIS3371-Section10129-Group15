@@ -7,7 +7,7 @@
   --white: #ffffff;
   --text: #1c2833;
   --muted: #5c6b7a;
-  --line: #d5dde6;https://github.com/UH-MIS3371/MIS3371-Section10129-Group15/edit/main/style.css
+  --line: #d5dde6;
   --notice: #fff8e8;
 }
 
@@ -202,8 +202,8 @@ button:focus-visible {
   padding: 0.85rem 1rem;
   margin-top: 1rem;
   border: 1px solid;
-  border-left-widge: 5px;
-  boarder-radius: 6px;
+  border-left-width: 5px;
+  border-radius: 6px;
   font-weight: 600;
   overflow-wrap: anywhere;
 }
