@@ -1,5 +1,26 @@
-Requirements / Product Lead - Leonardo Gil Samanez
-UI / Accessibility Lead - Hadi
-JavaScript / Logic Lead- Andres 
-Git / Integration Lead- Elizabeth
-QA / Documentation Lead- Leandro
+Team Roles and Responsibilities
+
+Requirements / Product Lead – Leonardo Gil Samanez
+- Define project requirements and business rules.
+- Ensure the system meets project objectives.
+- Coordinate team priorities and deliverables.
+
+UI / Accessibility Lead – Hadi
+- Design and maintain the HTML and CSS.
+- Ensure the interface is responsive and user-friendly.
+- Improve accessibility and consistency across the website.
+
+JavaScript / Logic Lead – Andres
+- Develop JavaScript functions and system logic.
+- Implement form validation and business rules.
+- Troubleshoot and fix functionality issues.
+
+Git / Integration Lead – Elizabeth
+- Manage the GitHub repository and branches.
+- Coordinate code merges and resolve conflicts.
+- Ensure all team contributions work together.
+
+QA / Documentation Lead – Leandro
+- Test system functionality and identify errors.
+- Document test cases and results.
+- Maintain project documentation and verify requirements are met.
