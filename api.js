@@ -8,7 +8,7 @@
 
 // Replace with the Invoke URL from API Gateway after the HTTP API is created.
 // Example: https://abc123xyz.execute-api.us-east-1.amazonaws.com/clockin
-const API_URL = "https://REPLACE_WITH_API_ID.execute-api.us-east-1.amazonaws.com/clockin";
+const API_URL = "https://xp1ld05jfe.execute-api.us-east-1.amazonaws.com/clockin";
 
 // data = { employeeId, department, scheduledShiftStart, clockInComment }
 // The clock-in time is NOT sent; Lambda sets it on the server.
