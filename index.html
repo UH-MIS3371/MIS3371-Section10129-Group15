@@ -58,6 +58,7 @@
           <div class="form-group">
             <label for="employeeId">Employee ID / Badge Number:</label>
             <input type="text" id="employeeId" name="employeeId" placeholder="EMP-12345" required />
+            <p class="field-error" id="employeeIdError" aria-live="polite"></p>
           </div>
 
           <!-- department: known list of choices, so a dropdown fits. Empty value = nothing chosen. -->
@@ -70,12 +71,14 @@
               <option value="Prepared Foods">Prepared Foods</option>
               <option value="Front End">Front End</option>
             </select>
+            <p class="field-error" id="departmentError" aria-live="polite"></p>
           </div>
 
           <!-- scheduledShiftStart: time picker -->
           <div class="form-group">
             <label for="scheduledShiftStart">Scheduled Shift Start:</label>
             <input type="time" id="scheduledShiftStart" name="scheduledShiftStart" required />
+            <p class="field-error" id="scheduledShiftStartError" aria-live="polite"></p>
           </div>
 
           <!--
@@ -96,6 +99,7 @@
           <div class="form-group">
             <label for="clockInComment">Comment (required if more than 15 minutes early or late):</label>
             <textarea id="clockInComment" name="clockInComment" rows="3" maxlength="250"></textarea>
+            <p class="field-error" id="clockInCommentError" aria-live="polite"></p>
           </div>
 
         </fieldset>
@@ -105,7 +109,7 @@
           <button type="reset">Clear Form</button>
         </div>
 
-        <!-- formMessage: app.js shows validation errors here -->
+        <!-- formMessage: app.js shows a short "please fix the errors" note here; each box has its own message above -->
         <p id="formMessage" role="alert"></p>
 
         <!-- clockInStatus: kept from the earlier version; the live Employee ID message shows here -->
