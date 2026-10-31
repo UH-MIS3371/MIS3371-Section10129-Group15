@@ -4,7 +4,7 @@
   <!--
     HALLE Clock-In System
     MIS 3371 Group Project
-    Field names (id/name) match docs/data-dictionary.docx
+    Field names (id/name) match the data dictionary and the backend (Lambda).
   -->
 
   <meta charset="UTF-8">
@@ -18,7 +18,12 @@
   <!-- Loads the page styles from the external stylesheet -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- defer: run app.js after the HTML has finished loading -->
+  <!--
+    defer: run the scripts after the HTML has loaded.
+    Deferred scripts run in the order listed, so api.js (submitClockIn)
+    is ready before app.js uses it.
+  -->
+  <script src="api.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 
@@ -40,86 +45,58 @@
       <h2>Employee Clock-In Submission</h2>
 
       <!--
-        One form = one clock-in request.
-        Every id and name below matches the data dictionary field name.
-        Each label's "for" matches its input's "id" so screen readers
-        and mouse clicks connect the label to the right control.
+        novalidate: turns off the browser's pop-up validation so app.js can
+        show our exact error messages instead. The required/maxlength
+        attributes stay in the HTML as documentation and for accessibility.
       -->
-      <form id="clockInForm" action="#" method="POST">
+      <form id="clockInForm" action="#" method="POST" novalidate>
 
-        <!-- fieldset groups related controls; legend names the group -->
         <fieldset>
           <legend>Clock-In Details</legend>
 
-          <!--
-            employeeId: user-entered (data dictionary).
-            Native constraints: required + pattern (EMP- then numbers).
-            Matching an existing employee record is a business rule,
-            so it is NOT checked here.
-          -->
+          <!-- employeeId: user-entered, format EMP- plus 5 digits (checked in app.js) -->
           <div class="form-group">
             <label for="employeeId">Employee ID / Badge Number:</label>
-            <input type="text" id="employeeId" name="employeeId" placeholder="e.g., EMP-10492" required pattern="EMP-[0-9]+" inputmode="numeric" />
+            <input type="text" id="employeeId" name="employeeId" placeholder="EMP-12345" required />
           </div>
 
-          <!--
-            workLocation: user-entered demonstration field.
-            Employees choose where they are working for this clock-in.
-            No GPS, geofencing, or backend location check in this milestone.
-          -->
+          <!-- department: known list of choices, so a dropdown fits. Empty value = nothing chosen. -->
           <div class="form-group">
-            <label for="workLocation">Work Location:</label>
-            <select id="workLocation" name="workLocation" required>
-              <option value="" selected>Select your work location</option>
-              <option value="Home / Remote">Home / Remote</option>
-              <option value="Office">Office</option>
-              <option value="Warehouse">Warehouse</option>
-              <option value="On-Site / Field Location">On-Site / Field Location</option>
-              <option value="Other">Other</option>
+            <label for="department">Department:</label>
+            <select id="department" name="department" required>
+              <option value="">Select a department</option>
+              <option value="Grocery">Grocery</option>
+              <option value="Produce">Produce</option>
+              <option value="Prepared Foods">Prepared Foods</option>
+              <option value="Front End">Front End</option>
             </select>
           </div>
 
-          <!--
-            scheduledShiftDate: type="date" gives a date picker.
-            In production this is DERIVED from the employee's schedule
-            record; here it is an input so the form can be tested.
-            Whether a shift exists on this date is a business rule
-            (BR-6), so there is no min or max.
-          -->
-          <div class="form-group">
-            <label for="scheduledShiftDate">Scheduled Shift Date:</label>
-            <input type="date" id="scheduledShiftDate" name="scheduledShiftDate" required />
-          </div>
-
-          <!--
-            scheduledShiftStart: type="time" gives a time picker.
-            Also derived in production (from the assigned shift).
-            No min or max: the 15-minute early/late window is a business
-            rule that JavaScript and the application tier enforce.
-          -->
+          <!-- scheduledShiftStart: time picker -->
           <div class="form-group">
             <label for="scheduledShiftStart">Scheduled Shift Start:</label>
             <input type="time" id="scheduledShiftStart" name="scheduledShiftStart" required />
           </div>
 
           <!--
-            clockInTimestamp: the clock-in time. System-assigned, so it is
-            readonly and filled automatically on submit (JavaScript).
-            The employee cannot type or change it.
-            Note: browsers skip validation for readonly inputs, so
-            "required" would have no effect here.
+            clockInTime: read-only display of the current time.
+            app.js refreshes it every minute. It is NOT sent to the backend;
+            the backend records its own clockInTimestamp.
           -->
           <div class="form-group">
-            <label for="clockInTimestamp">Clock-In Timestamp:</label>
-            <input type="datetime-local" id="clockInTimestamp" name="clockInTimestamp" step="1" readonly />
+            <label for="clockInTime">Clock-In Time:</label>
+            <input type="text" id="clockInTime" name="clockInTime" readonly />
           </div>
 
           <!--
-            timeMessage: intentionally empty. The JavaScript person fills
-            it with the early/late result. aria-live="polite" makes screen
-            readers announce the text when it changes.
+            clockInComment: optional unless the employee is more than
+            15 minutes early or late (checked in app.js).
+            maxlength="250" stops typing past 250 characters.
           -->
-          <p id="timeMessage" aria-live="polite"></p>
+          <div class="form-group">
+            <label for="clockInComment">Comment (required if more than 15 minutes early or late):</label>
+            <textarea id="clockInComment" name="clockInComment" rows="3" maxlength="250"></textarea>
+          </div>
 
         </fieldset>
 
@@ -128,28 +105,17 @@
           <button type="reset">Clear Form</button>
         </div>
 
-        <!--
-          formMessage: intentionally empty. The JavaScript person fills
-          it with the overall form result (for example, an error or a
-          confirmation after submit).
-        -->
-        <p id="formMessage" aria-live="polite"></p>
+        <!-- formMessage: app.js shows validation errors here -->
+        <p id="formMessage" role="alert"></p>
 
-        <!-- clockInStatus: kept from Week 6; hidden until JavaScript shows it -->
+        <!-- clockInStatus: kept from the earlier version; the live Employee ID message shows here -->
         <p id="clockInStatus" aria-live="polite" hidden></p>
 
       </form>
-    </section>
 
-    <!--
-      Week 6 test input. In production, minutesFromShiftStart is
-      calculated by the system (derived), not entered by the employee.
-    -->
-    <section id="punctuality-check-section">
-      <h2>Punctuality Check (Test Input)</h2>
-      <label for="minutesFromShiftStart">Minutes from scheduled shift start (negative = early, positive = late):</label>
-      <input type="number" id="minutesFromShiftStart" name="minutesFromShiftStart" step="1" />
-      <p id="punctualityMessage" aria-live="polite"></p>
+      <!-- responseMessage: showResult() shows the backend result here (Accepted / Flagged / Rejected) -->
+      <div id="responseMessage" aria-live="polite"></div>
+
     </section>
 
   </main>
