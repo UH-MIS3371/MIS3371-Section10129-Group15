@@ -262,3 +262,7 @@ section {
   display: none !important;
 }
 
+#responseMessage { margin-top: 15px; }
+.status-accepted { color: #1b7f3b; }
+.status-flagged  { color: #d97706; }
+.status-rejected { color: #c62828; }
