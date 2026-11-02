@@ -2,7 +2,7 @@
 // Sends clock-in requests from the form to API Gateway (which calls the Lambda backend)
 // and passes the result to showResult() in app.js.
 //
-// Load this file BEFORE app.js in ClockInTransaction.html:
+// Load this file BEFORE app.js in index.html:
 //   <script src="api.js"></script>
 //   <script src="app.js"></script>
 
