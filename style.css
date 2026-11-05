@@ -1,323 +1,509 @@
-:root {
-  --navy: #0f2744;
-  --navy-mid: #1a3a5c;
-  --gold: #c9a227;
-  --cream: #f4f7fb;
-  --white: #ffffff;
-  --text: #1c2833;
-  --muted: #5c6b7a;
-  --line: #d5dde6;
-  --notice: #fff8e8;
-}
+/* ==========================================================
+   HALLE Clock-In System: style2.css (v4)
+   CSS-only. Matches the existing HTML; no ID/class/JS changes.
+   Concept: a grocery time card. Deep produce-green ink, paper
+   white, and one sharp price-tag yellow. Crisp borders and a
+   single staggered page-load instead of hover effects.
+   ========================================================== */
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+   @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap");
 
-body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  font-family: "Segoe UI", Tahoma, sans-serif;
-  background: var(--cream);
-  color: var(--text);
-  line-height: 1.5;
-}
-
-header {
-  background: var(--navy);
-  color: var(--white);
-  padding: 1.35rem 1.75rem 1.2rem;
-  border-bottom: 4px solid var(--gold);
-}
-
-h1 {
-  font-size: 1.75rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1.2;
-}
-
-header p {
-  margin-top: 0.3rem;
-  color: rgba(255, 255, 255, 0.82);
-  font-size: 0.98rem;
-}
-
-main {
-  width: min(760px, 100%);
-  margin: 1.5rem auto 2rem;
-  padding: 0 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-section {
-  background: var(--white);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 1.25rem 1.4rem 1.4rem;
-  box-shadow: 0 1px 2px rgba(15, 39, 68, 0.05);
-}
-
-main > section:first-of-type {
-  background: var(--notice);
-  border-color: #ead79a;
-  border-left: 4px solid var(--gold);
-}
-
-section section {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  padding: 0.75rem 0 0;
-}
-
-h2 {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--navy);
-  margin-bottom: 0.65rem;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--line);
-}
-
-p {
-  font-size: 0.98rem;
-  line-height: 1.6;
-  color: var(--text);
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.95rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.35rem;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--navy-mid);
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 0.65rem 0.75rem;
-  border: 1px solid #b7c4d1;
-  border-radius: 6px;
-  background: var(--white);
-  color: var(--text);
-  font: inherit;
-  font-size: 0.98rem;
-}
-
-textarea {
-  resize: vertical;
-  min-height: 5.5rem;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: 2px solid rgba(201, 162, 39, 0.55);
-  border-color: var(--navy);
-}
-
-input[readonly] {
-  background: #eef3f8;
-  color: var(--navy);
-}
-
-.form-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
-  margin-top: 0.35rem;
-}
-
-button {
-  font: inherit;
-  font-weight: 600;
-  font-size: 0.95rem;
-  padding: 0.7rem 1.15rem;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-button[type="submit"] {
-  background: var(--navy);
-  color: var(--white);
-  border: 1px solid var(--navy);
-}
-
-button[type="submit"]:hover {
-  background: var(--navy-mid);
-}
-
-button[type="reset"] {
-  background: var(--white);
-  color: var(--navy);
-  border: 1px solid var(--navy);
-}
-
-button[type="reset"]:hover {
-  background: #eef3f8;
-}
-
-footer {
-  margin-top: auto;
-  background: var(--navy);
-  text-align: center;
-  padding: 0.85rem 1rem;
-}
-
-footer p {
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 0.8rem;
-}
-
-/* Reusuable flexbox layout for two short fields */
-.form-row {
-  display: flex;
-  gap: 1rem;
-}
-
-/* Visible keyboard focus for buttons */
-button:focus-visible {
-  outline: 3px solid var(--gold);
-  outline-offset: 3px;
-}
-
-/*Reusable styling for status messages */
-.status-message {
-  padding: 0.85rem 1rem;
-  margin-top: 1rem;
-  border: 1px solid;
-  border-left-width: 5px;
-  border-radius: 6px;
-  font-weight: 600;
-  overflow-wrap: anywhere;
-}
-
-/* Accepted / Success */
-.status-success {
-  background: #e8f5e9;
-  border-color: #237a42;
-  color: #185c32;
-}
-
-/* Flagged / Warning */
-.status-flagged {
-  background: #fff3cd;
-  border-color: #946200;
-  color: #694600;
-}
-
-/* Rejected / Error */
-.status-rejected {
-  background: #fde8e8;
-  border-color: #b42318;
-  color: #8b1e16;
-}
-
-/* Responsive design for mobile screens*/
-@media (max-width: 600px) {
-  .form-row {
-    flex-direction: column;
-  }
-
-  .form-row .form-group {
-    width: 100%;
-  }
-  
-section {
-    padding: 1rem;
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
-
-  .form-actions button {
-    width: 100%;
-  }
-}
-
-.status-submitted {
-  background: #eef3f8;
-  border-color: var(--navy);
-  color: var(--navy);
-}
-
-[hidden]{
-  display: none !important;
-}
-fieldset {
-  border: none;
-  padding: 0;
-  margin: 0;
-  min-width: 0;
-}
- 
-legend {
-  font-weight: bold;
-  font-size: 1.1rem;
-  padding: 0;
-  margin-bottom: 0.75rem;
-}
- 
-fieldset {
-  border: none;
-  padding: 0;
-  margin: 0;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.95rem;
-}
- 
-legend {
-  font-weight: 600;
-  font-size: 1.05rem;
-  color: var(--navy);
-  padding: 0;
-  margin-bottom: 0.75rem;
-}
- 
-/* Error messages: red so people notice the problem */
-#formMessage,
-#clockInStatus {
-  color: #c62828;
-  font-weight: 600;
-}
- 
-/* Result display colors */
-#responseMessage { margin-top: 0.5rem; }
-.status-accepted { color: #1b7f3b; }
-.status-flagged  { color: #d97706; }
-.status-rejected { color: #c62828; }
- /* ===== Add to the END of style.css ===== */
-/* Red message under each box, and a red outline on a box that has a problem */
-
-.field-error {
-  color: #c62828;
-  font-size: 0.88rem;
-  font-weight: 600;
-  margin-top: 0.35rem;
-}
-
-.field-error:empty {
-  display: none;
-}
-
-.input-error {
-  border-color: #c62828;
-}
+   /* ---------- 1. Tokens ---------- */
+   :root {
+     /* Color: one dominant, one accent */
+     --ink: #0b2a1f;
+     --ink-2: #14412f;
+     --tag: #ffcf1f;
+     --tag-d: #f0b900;
+     --paper: #f1f5ee;
+     --white: #fff;
+     --text: #0f2118;
+     --muted: #4b6256;
+     --line: #cdd8cf;
+     --line-strong: #8fa597;
+   
+     --ok: #17653f;    --ok-bg: #e2f3e7;   --ok-line: #9fd2b0;
+     --flag: #e8590c;  --flag-bg: #fff0dc; --flag-line: #f0b36b; --flag-text: #8a3b00;
+     --bad: #c92a2a;   --bad-bg: #fde8e8;  --bad-line: #f1a9a9;  --bad-text: #a61b1b;
+   
+     /* Type */
+     --display: "Bricolage Grotesque", "Helvetica Neue", Helvetica, sans-serif;
+     --body: "Instrument Sans", "Helvetica Neue", Helvetica, sans-serif;
+     --mono: "DM Mono", ui-monospace, Consolas, monospace;
+     --fs-sm: .875rem;
+     --fs-md: 1rem;
+     --fs-lg: 1.125rem;
+     --fs-xl: clamp(1.5rem, 3.5vw, 1.9rem);
+     --fs-hero: clamp(2.9rem, 9vw, 5.25rem);
+   
+     /* Shape */
+     --r-sm: 6px;
+     --r-lg: 12px;
+     --ease: cubic-bezier(.2, .7, .2, 1);
+   
+     /* Status icons (masks) */
+     --i-info: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 11v5M12 7.5v.01'/%3E%3C/svg%3E");
+     --i-ok: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='m8 12.5 3 3 5-6'/%3E%3C/svg%3E");
+     --i-flag: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 21V4h11l-2 4 2 4H5'/%3E%3C/svg%3E");
+     --i-x: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='m9 9 6 6m0-6-6 6'/%3E%3C/svg%3E");
+   }
+   
+   /* ---------- 2. Base ---------- */
+   *, *::before, *::after { box-sizing: border-box; }
+   [hidden] { display: none !important; }
+   ::selection { background: var(--tag); color: var(--ink); }
+   
+   html { -webkit-text-size-adjust: 100%; }
+   
+   body {
+     margin: 0;
+     min-height: 100vh;
+     min-height: 100dvh;
+     display: flex;
+     flex-direction: column;
+     font: 400 var(--fs-md)/1.55 var(--body);
+     color: var(--text);
+     background-color: var(--paper);
+     /* Atmosphere: a faint ledger grid */
+     background-image:
+       linear-gradient(rgba(11, 42, 31, .05) 1px, transparent 1px),
+       linear-gradient(90deg, rgba(11, 42, 31, .05) 1px, transparent 1px);
+     background-size: 40px 40px;
+     -webkit-font-smoothing: antialiased;
+   }
+   
+   /* ---------- 3. Header: dark ink with a clock-dial motif ---------- */
+   header {
+     position: relative;
+     overflow: hidden;
+     padding: 2.25rem max(1.25rem, 6vw) 6rem;
+     color: var(--white);
+     background-color: var(--ink);
+     background-image:
+       /* dial rings, bleeding off the top right */
+       radial-gradient(circle at 90% 28%, transparent 0 138px, rgba(255, 207, 31, .85) 138px 141px, transparent 141px),
+       radial-gradient(circle at 90% 28%, transparent 0 196px, rgba(255, 255, 255, .16) 196px 197px, transparent 197px),
+       radial-gradient(circle at 90% 28%, transparent 0 262px, rgba(255, 255, 255, .09) 262px 263px, transparent 263px),
+       /* fine diagonal hatching */
+       repeating-linear-gradient(135deg, rgba(255, 255, 255, .035) 0 1px, transparent 1px 14px);
+   }
+   
+   header::before {
+     content: "HALLE";
+     display: block;
+     width: max-content;
+     max-width: 100%;
+     margin-bottom: 1.5rem;
+     padding: .1rem 0 .1rem .75rem;
+     font: 800 var(--fs-md)/1 var(--display);
+     letter-spacing: .22em;
+     border-left: 8px solid var(--tag);
+   }
+   
+   header h1 {
+     margin: 0 0 .5rem;
+     font: 800 var(--fs-hero)/.95 var(--display);
+     letter-spacing: -.045em;
+     overflow-wrap: anywhere;
+   }
+   
+   header p {
+     margin: 0;
+     max-width: 34ch;
+     font-size: var(--fs-lg);
+     line-height: 1.4;
+     color: #c4dccd;
+   }
+   
+   /* ---------- 4. Layout ---------- */
+   main {
+     position: relative;
+     z-index: 2;
+     flex: 1;
+     width: 100%;
+     max-width: 800px;
+     margin: -3.25rem auto 0;
+     padding: 0 max(1.25rem, env(safe-area-inset-right)) 3.5rem max(1.25rem, env(safe-area-inset-left));
+   }
+   
+   main > section { margin-bottom: 1.5rem; min-width: 0; }
+   
+   main h2 {
+     margin: 0 0 .6rem;
+     font: 700 var(--fs-lg)/1.2 var(--display);
+     letter-spacing: -.01em;
+   }
+   
+   /* ---------- 5. Notice ---------- */
+   main > section:first-child {
+     padding: 1.25rem 1.5rem 1.4rem;
+     background: var(--white);
+     border: 1.5px solid var(--ink);
+     border-radius: var(--r-lg);
+     box-shadow: 0 0 0 5px rgba(11, 42, 31, .06);
+   }
+   
+   /* Highlighter-marker heading */
+   main > section:first-child h2 {
+     display: inline;
+     padding: 0 .3rem;
+     margin-left: -.3rem;
+     background: linear-gradient(transparent 52%, var(--tag) 52% 92%, transparent 92%);
+   }
+   
+   main > section:first-child p {
+     margin: .8rem 0 0;
+     font-size: var(--fs-md);
+     line-height: 1.65;
+     overflow-wrap: anywhere;
+   }
+   
+   /* ---------- 6. Form card (time-card stub) ---------- */
+   #clock-in-form-section {
+     position: relative;
+     overflow: hidden;
+     padding: calc(clamp(1.5rem, 4vw, 2.5rem) + 8px) clamp(1.25rem, 4vw, 2.5rem) clamp(1.5rem, 4vw, 2.5rem);
+     background: var(--white);
+     border: 1.5px solid var(--ink);
+     border-radius: var(--r-lg);
+     box-shadow: 0 0 0 5px rgba(11, 42, 31, .06);
+   }
+   
+   /* Price-tag stripe along the top edge */
+   #clock-in-form-section::before {
+     content: "";
+     position: absolute;
+     inset: 0 0 auto 0;
+     height: 8px;
+     background: repeating-linear-gradient(135deg, var(--tag) 0 10px, var(--ink) 10px 20px);
+   }
+   
+   #clock-in-form-section > h2 {
+     margin: 0 0 1.5rem;
+     padding-bottom: 1.1rem;
+     font: 800 var(--fs-xl)/1.1 var(--display);
+     letter-spacing: -.035em;
+     border-bottom: 2px dashed var(--line-strong);
+     overflow-wrap: anywhere;
+   }
+   
+   fieldset {
+     display: grid;
+     grid-template-columns: repeat(2, minmax(0, 1fr));
+     column-gap: 1.25rem;
+     margin: 0;
+     padding: 0;
+     border: 0;
+     min-width: 0;
+   }
+   
+   legend {
+     margin: 0 0 1.25rem;
+     padding: 0;
+     font: 600 var(--fs-sm)/1.3 var(--body);
+     letter-spacing: .02em;
+     color: var(--muted);
+   }
+   
+   .form-group { margin-bottom: 1.4rem; min-width: 0; }
+   .form-group:nth-of-type(1),
+   .form-group:nth-of-type(4),
+   .form-group:nth-of-type(5) { grid-column: 1 / -1; }
+   
+   /* ---------- 7. Labels & fields ---------- */
+   label {
+     display: block;
+     margin: 0 0 .5rem;
+     font: 600 var(--fs-sm)/1.35 var(--body);
+     color: var(--ink);
+     overflow-wrap: anywhere;
+   }
+   
+   input[type="text"],
+   input[type="time"],
+   select,
+   textarea {
+     display: block;
+     width: 100%;
+     min-width: 0;
+     min-height: 52px;             /* comfortable touch target */
+     padding: .8rem 1rem;
+     font: 500 var(--fs-md)/1.4 var(--body);   /* 16px: no iOS zoom on focus */
+     color: var(--text);
+     background-color: var(--white);
+     border: 1.5px solid var(--line-strong);
+     border-radius: var(--r-sm);
+     text-overflow: ellipsis;
+     transition: border-color .15s, box-shadow .15s;
+   }
+   
+   input::placeholder,
+   textarea::placeholder { color: #7d9285; }
+   
+   input:hover,
+   select:hover,
+   textarea:hover { border-color: var(--ink-2); }
+   
+   input:focus,
+   select:focus,
+   textarea:focus {
+     outline: none;
+     border-color: var(--ink);
+     box-shadow: 0 0 0 4px rgba(255, 207, 31, .7);
+   }
+   
+   input[type="time"]::-webkit-calendar-picker-indicator { cursor: pointer; padding: .35rem; }
+   
+   select {
+     appearance: none;
+     -webkit-appearance: none;
+     padding-right: 2.75rem;
+     cursor: pointer;
+     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230b2a1f' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+     background-repeat: no-repeat;
+     background-position: right 1rem center;
+   }
+   
+   textarea {
+     min-height: 120px;
+     max-height: 45vh;
+     resize: vertical;
+     overflow-wrap: anywhere;
+   }
+   
+   /* ---------- 8. The high-impact element: Clock-In Time readout ---------- */
+   label[for="clockInTime"] {
+     display: flex;
+     flex-wrap: wrap;
+     align-items: baseline;
+     justify-content: space-between;
+     gap: .15rem .75rem;
+   }
+   
+   label[for="clockInTime"]::after {
+     content: "Updates automatically";
+     font-weight: 500;
+     font-size: .8rem;
+     color: var(--muted);
+   }
+   
+   #clockInTime {
+     min-height: 88px;
+     padding: .5rem 1.25rem;
+     text-align: center;
+     cursor: default;
+     font: 500 clamp(2.1rem, 8vw, 3rem)/1 var(--mono);
+     letter-spacing: .06em;
+     font-variant-numeric: tabular-nums;
+     color: var(--tag);
+     background-color: var(--ink);
+     background-image: repeating-linear-gradient(0deg, rgba(255, 255, 255, .04) 0 1px, transparent 1px 4px);
+     border: 1.5px solid var(--ink);
+     border-radius: var(--r-lg);
+     /* inner keyline, like a gauge bezel */
+     outline: 1px solid rgba(255, 207, 31, .45);
+     outline-offset: -8px;
+     text-overflow: clip;
+   }
+   
+   #clockInTime:hover,
+   #clockInTime:focus { border-color: var(--ink); box-shadow: none; }
+   
+   /* ---------- 9. Validation (driven by app.js error text) ---------- */
+   .field-error {
+     margin: .5rem 0 0;
+     font: 600 var(--fs-sm)/1.35 var(--body);
+     color: var(--bad-text);
+     overflow-wrap: anywhere;
+   }
+   
+   .field-error:empty { display: none; }
+   
+   .form-group:has(.field-error:not(:empty)) input,
+   .form-group:has(.field-error:not(:empty)) select,
+   .form-group:has(.field-error:not(:empty)) textarea {
+     border-color: var(--bad);
+     background-color: #fffafa;
+     box-shadow: 0 0 0 3px rgba(201, 42, 42, .14);
+   }
+   
+   /* ---------- 10. Buttons ---------- */
+   .form-actions {
+     display: flex;
+     flex-wrap: wrap;
+     gap: .75rem;
+     margin-top: 1.75rem;
+     padding-top: 1.5rem;
+     border-top: 2px dashed var(--line-strong);
+   }
+   
+   button {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     min-height: 52px;
+     min-width: 48px;
+     padding: 0 1.75rem;
+     font: 700 var(--fs-md)/1.1 var(--display);
+     letter-spacing: .01em;
+     color: var(--ink);
+     background: transparent;
+     border: 1.5px solid var(--ink);
+     border-radius: var(--r-sm);
+     cursor: pointer;
+     transition: background-color .15s, color .15s;
+   }
+   
+   button:hover { background: rgba(11, 42, 31, .07); }
+   
+   /* Primary: price-tag yellow, pressed like a physical key */
+   button[type="submit"] {
+     flex: 1 1 14rem;
+     background: var(--tag);
+     box-shadow: 0 3px 0 var(--ink);
+   }
+   
+   button[type="submit"]:hover { background: var(--tag-d); }
+   
+   button[type="submit"]:active {
+     transform: translateY(2px);
+     box-shadow: 0 1px 0 var(--ink);
+   }
+   
+   button:focus-visible {
+     outline: 3px solid var(--ink);
+     outline-offset: 3px;
+   }
+   
+   button:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; }
+   
+   /* ---------- 11. Messages ---------- */
+   #formMessage {
+     margin: 1.25rem 0 0;
+     padding: .85rem 1.1rem;
+     font: 600 var(--fs-sm)/1.45 var(--body);
+     color: var(--bad-text);
+     background: var(--bad-bg);
+     border: 1.5px solid var(--bad-line);
+     border-radius: var(--r-sm);
+     overflow-wrap: anywhere;
+   }
+   
+   #formMessage:empty { display: none; }
+   
+   #clockInStatus {
+     margin: 1rem 0 0;
+     padding: .75rem 1.1rem;
+     font: 600 var(--fs-sm)/1.45 var(--body);
+     color: var(--ink);
+     background: #fff8d6;
+     border: 1.5px solid var(--tag-d);
+     border-radius: var(--r-sm);
+     overflow-wrap: anywhere;
+   }
+   
+   /* Backend result: Accepted / Flagged / Rejected */
+   #responseMessage {
+     --ico: var(--i-info);
+     position: relative;
+     margin-top: 1.5rem;
+     padding: 1.15rem 1.25rem 1.15rem 3.6rem;
+     font-weight: 600;
+     color: var(--ink);
+     background: #eef2ec;
+     border: 1.5px solid var(--line-strong);
+     border-left: 8px solid var(--ink);
+     border-radius: var(--r-sm);
+     overflow-wrap: anywhere;
+     hyphens: auto;
+   }
+   
+   #responseMessage::before {
+     content: "";
+     position: absolute;
+     left: 1.1rem;
+     top: 1.15rem;
+     width: 1.5rem;
+     height: 1.5rem;
+     background: currentColor;
+     -webkit-mask: var(--ico) center / contain no-repeat;
+     mask: var(--ico) center / contain no-repeat;
+   }
+   
+   #responseMessage:empty { display: none; }
+   
+   #responseMessage.accepted, #responseMessage.success,
+   #responseMessage.status-accepted, #responseMessage[data-status="Accepted"] {
+     --ico: var(--i-ok);
+     color: var(--ok); background: var(--ok-bg); border-color: var(--ok-line); border-left-color: var(--ok);
+   }
+   
+   #responseMessage.flagged, #responseMessage.warning,
+   #responseMessage.status-flagged, #responseMessage[data-status="Flagged"] {
+     --ico: var(--i-flag);
+     color: var(--flag-text); background: var(--flag-bg); border-color: var(--flag-line); border-left-color: var(--flag);
+   }
+   
+   #responseMessage.rejected, #responseMessage.error,
+   #responseMessage.status-rejected, #responseMessage[data-status="Rejected"] {
+     --ico: var(--i-x);
+     color: var(--bad-text); background: var(--bad-bg); border-color: var(--bad-line); border-left-color: var(--bad);
+   }
+   
+   /* ---------- 12. Footer ---------- */
+   footer {
+     padding: 1.5rem max(1.25rem, 6vw) calc(1.5rem + env(safe-area-inset-bottom));
+     font-size: var(--fs-sm);
+     color: #b6cfbf;
+     background: var(--ink);
+     border-top: 4px solid var(--tag);
+   }
+   
+   footer p { margin: 0; overflow-wrap: anywhere; }
+   
+   /* ---------- 13. Motion: one staggered page-load, nothing else ---------- */
+   @keyframes rise {
+     from { opacity: 0; transform: translateY(16px); }
+     to   { opacity: 1; transform: none; }
+   }
+   
+   header h1,
+   header p,
+   main > section:first-child,
+   #clock-in-form-section > h2,
+   legend,
+   .form-group,
+   .form-actions {
+     animation: rise .6s var(--ease) both;
+   }
+   
+   header h1 { animation-delay: .05s; }
+   header p { animation-delay: .12s; }
+   main > section:first-child { animation-delay: .2s; }
+   #clock-in-form-section > h2 { animation-delay: .3s; }
+   legend { animation-delay: .34s; }
+   .form-group:nth-of-type(1) { animation-delay: .38s; }
+   .form-group:nth-of-type(2) { animation-delay: .43s; }
+   .form-group:nth-of-type(3) { animation-delay: .48s; }
+   .form-group:nth-of-type(4) { animation-delay: .53s; }
+   .form-group:nth-of-type(5) { animation-delay: .58s; }
+   .form-actions { animation-delay: .64s; }
+   
+   /* ---------- 14. Responsive ---------- */
+   @media (max-width: 640px) {
+     header { padding-bottom: 5rem; }
+     main { margin-top: -2.75rem; }
+     fieldset { grid-template-columns: minmax(0, 1fr); }
+     .form-group:nth-of-type(n) { grid-column: 1 / -1; }
+     .form-actions { flex-direction: column-reverse; }
+     button { width: 100%; }
+     label[for="clockInTime"]::after { flex-basis: 100%; }
+   }
+   
+   @media (prefers-reduced-motion: reduce) {
+     *, *::before, *::after { animation: none !important; transition: none !important; }
+   }
+   
+   @media (forced-colors: active) {
+     button, input, select, textarea { border: 2px solid ButtonText; }
+   }
