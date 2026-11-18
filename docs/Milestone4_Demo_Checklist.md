@@ -1,66 +1,54 @@
 # Milestone 4 Live Deployment Test Demo Script & Checklist
 
-## 1. Demo Pre-Requisites & Deployment Verification
-- [x] AWS S3 Static Web Hosting active and accessible via browser.
-- [x] AWS API Gateway CORS enabled (`Access-Control-Allow-Origin: *`).
-- [x] Lambda execution role granted DynamoDB Read/Write permissions.
-- [x] DynamoDB `ClockInRecords` table active with primary key `ConfirmationNumber`.
+**Target Duration:** 5 to 8 Minutes  
+**Recording Format:** Individual video recording with webcam (face) and microphone (voice) visible and audible throughout.
 
 ---
 
-## 2. Step-by-Step Live Demo Execution Script
-
-### Step 1: Standard On-Time Clock-In Submission
-1. Open HALLE Clock-In Application web interface.
-2. Enter Employee ID: `EMP-10001`.
-3. Select Department / Work Location: `Warehouse`.
-4. Select Shift Time: `08:00 AM`.
-5. Enter Clock-In Time: `08:05 AM` (Within 15-minute window).
-6. Leave Comment field blank.
-7. Click **Submit Clock-In**.
-8. **Expected Verification**:
-   - Status badge displays **Approved / On-Time** (`isFlagged: false`).
-   - Unique Confirmation Number generated (e.g., `CNF-XXXXXX`).
-
-### Step 2: Early Clock-In with Mandatory Comment Validation
-1. Enter Employee ID: `EMP-10002`.
-2. Select Department / Work Location: `Retail Store`.
-3. Select Shift Time: `09:00 AM`.
-4. Enter Clock-In Time: `08:30 AM` (30 minutes early -> Flagged).
-5. Attempt submission without comment -> Verify system error: *"Comment required when clock-in is flagged"*.
-6. Type comment: *"Approved early arrival for inventory audit"*.
-7. Click **Submit Clock-In**.
-8. **Expected Verification**:
-   - Submission accepted with Status **Flagged** (`isFlagged: true`).
-   - Comment successfully recorded in DynamoDB.
-
-### Step 3: Late Clock-In with Mandatory Comment Validation
-1. Enter Employee ID: `EMP-10003`.
-2. Select Department / Work Location: `Corporate HQ`.
-3. Select Shift Time: `08:00 AM`.
-4. Enter Clock-In Time: `08:25 AM` (25 minutes late -> Flagged).
-5. Provide comment: *"Heavy traffic delay on main highway"*.
-6. Click **Submit Clock-In**.
-7. **Expected Verification**:
-   - Submission accepted with Status **Flagged** (`isFlagged: true`).
-   - Comment attached and Confirmation Number returned.
-
-### Step 4: Duplicate Clock-In Prevention Verification
-1. Re-enter Employee ID: `EMP-10001`.
-2. Select Department: `Warehouse`.
-3. Attempt to submit a second clock-in for an active session.
-4. **Expected Verification**:
-   - API returns error: *"Active clock-in session already exists for employee EMP-10001"*.
-
-### Step 5: Record Retrieval & AWS DynamoDB Verification
-1. Enter generated Confirmation Number into Lookup/Search bar.
-2. Click **Retrieve Record**.
-3. **Expected Verification**:
-   - Full clock-in entry displayed on UI matching DynamoDB item fields.
+## 1. Recording Pre-Requisites & Live Site Opening
+- [x] Presenter face and voice clearly visible and audible.
+- [x] Open team's deployed live website (AWS S3 / CloudFront live URL).
+- [x] State recording purpose: Validating Milestone 4 deployed website, core transaction flows, transaction retrieval, and business logic error handling.
 
 ---
 
-## 3. Executive Checklist for Thursday Deployment Test
-- [x] All 4 Business Rules validated in code (Early/Late Flag, Comment Required when Flagged, Department Required, Duplicate Prevention).
-- [x] Test Matrix documented in `docs/Milestone4_Test_Matrix.md`.
-- [x] Code updated with robust boundary handling in `leo/m4-midnight-fix-test-matrix` branch.
+## 2. Core Transaction Submission & Transaction Retrieval
+- [x] **Submit Valid Transaction:**
+  - Input valid Employee ID (`EMP-10001`), select Department (`Warehouse`), Shift Time (`08:00 AM`), and Clock-In Time (`08:05 AM`).
+  - Submit transaction and display the generated **Confirmation / Transaction Number** returned by backend (e.g., `CNF-XXXXXX`).
+- [x] **Retrieve Saved Transaction:**
+  - Input the generated Confirmation Number into transaction lookup tool.
+  - Retrieve and view saved transaction details.
+  - Demonstrate complete end-to-end communication: **Frontend -> API Gateway -> Lambda Backend -> DynamoDB Database**.
+
+---
+
+## 3. Test Matrix Scenarios Walkthrough
+
+### A. Valid Cases
+- [x] **Standard On-Time:** `EMP-10001` within ±15 min window (`08:05 AM`) without comment -> Approved / On-Time (`isFlagged: false`).
+- [x] **Early with Comment:** `EMP-10002` >15 min early (`07:30 AM`) with comment -> Approved / Flagged (`isFlagged: true`).
+- [x] **Late with Comment:** `EMP-10003` >15 min late (`08:45 AM`) with comment -> Approved / Flagged (`isFlagged: true`).
+
+### B. Invalid Cases
+- [x] **Missing Comment when Flagged:** Early/late clock-in submitted with blank comment -> Real-time rejection error ("Comment required when flagged").
+- [x] **Invalid Employee ID Format:** Input invalid ID format (e.g., `12345` or `EMP-ABC`) -> Real-time validation error ("Employee ID must match EMP-XXXXX").
+
+### C. Boundary Cases
+- [x] **Exact ±15 Minute Window Boundaries:**
+  - -15 mins (`07:45 AM` for `08:00 AM` shift) -> On-Time (`isFlagged: false`).
+  - +15 mins (`08:15 AM` for `08:00 AM` shift) -> On-Time (`isFlagged: false`).
+  - 16 mins early (`07:44 AM`) / late (`08:16 AM`) -> Flagged (`isFlagged: true`).
+- [x] **Max Comment Length:** Comment at max boundary (500 characters) -> Successfully accepted without truncation.
+
+### D. All 4 Business Rules Verification
+- [x] **Rule 1 (Early/Late Flagging):** Submissions outside ±15 min shift window are automatically flagged (`isFlagged: true`).
+- [x] **Rule 2 (Comment Required When Flagged):** Flagged submissions without explanation comment are rejected (Status: Rejected, HTTP 400).
+- [x] **Rule 3 (Department Required):** Missing Work Location / Department selection triggers real-time error message (`isWorkLocationValid: false`).
+- [x] **Rule 4 (Duplicate Clock-In Prevention):** Attempting duplicate active clock-in for an employee with an open active session triggers real-time duplicate error message (Status: Rejected).
+
+---
+
+## 4. Real-Time UI Feedback & Wrap-up
+- [x] Demonstrate real-time application responses and error messages for all invalid/boundary attempts.
+- [x] Wrap up demo concisely within the 5-8 minute window.
