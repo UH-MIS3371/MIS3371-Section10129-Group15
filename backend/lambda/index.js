@@ -162,8 +162,14 @@ function processClockIn(request, now = new Date()) {
     };
   }
 
-  const minutesFromShiftStart =
+  let minutesFromShiftStart =
     timeToMinutes(chicago.time) - timeToMinutes(shift);
+
+  // Handle shifts that cross midnight (for example 11:55 PM vs 12:05 AM).
+  // Matches getMinutesFromShiftStart() in app.js so the browser and the
+  // backend always agree on early/late.
+  if (minutesFromShiftStart > 720) minutesFromShiftStart -= 1440;
+  if (minutesFromShiftStart < -720) minutesFromShiftStart += 1440;
 
   const outsideWindow =
     Math.abs(minutesFromShiftStart) > CLOCK_IN_WINDOW_MINUTES;

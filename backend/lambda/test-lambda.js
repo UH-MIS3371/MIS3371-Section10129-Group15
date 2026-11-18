@@ -221,6 +221,28 @@ test("Lambda handler: response format", async () => {
   }
 });
 
+// Midnight crossover: shift 23:55, clock-in 12:05 AM Central (06:05 UTC).
+test("Midnight crossover: 10 minutes late is accepted", () => {
+  expectResult(
+    { scheduledShiftStart: "23:55" },
+    { clockInStatus: "Accepted", minutesFromShiftStart: 10 },
+    new Date("2026-11-03T06:05:00Z")
+  );
+});
+
+// Midnight crossover: shift 00:10, clock-in 11:50 PM the night before.
+test("Midnight crossover: 20 minutes early with comment is flagged", () => {
+  expectResult(
+    { scheduledShiftStart: "00:10", clockInComment: "Covering overnight stock" },
+    {
+      clockInStatus: "Flagged",
+      statusReason: "Clock-in more than 15 minutes early",
+      minutesFromShiftStart: -20
+    },
+    new Date("2026-11-03T05:50:00Z")
+  );
+});
+
 // Run every test and show the results.
 async function runTests() {
   let passed = 0;
