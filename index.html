@@ -122,6 +122,30 @@
 
     </section>
 
+
+    <section id="lookup-section">
+      <h2>Find Your Clock-In Transaction</h2>
+      <p>Enter your confirmation number to view your saved clock-in.</p>
+    
+      <form id="lookupForm">
+        <div class="form-group">
+          <label for="confirmationNumber">Confirmation Number:</label>
+          <input
+            type="text"
+            id="confirmationNumber"
+            placeholder="Enter confirmation number"
+            required
+          />
+        </div>
+    
+        <button type="submit" id="lookupButton">
+          Search Transaction
+        </button>
+      </form>
+    
+      <div id="lookupResult" aria-live="polite"></div>
+    </section>    
+
   </main>
 
   <footer>

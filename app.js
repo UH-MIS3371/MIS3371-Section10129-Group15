@@ -533,4 +533,79 @@ if (form && employeeId) {
       updateClockDisplay(); // a native reset empties the clock box
     }, 0);
   });
-}
+
+ // ==========================================
+ // Milestone 4: Retrieve Clock-In Transaction
+ // ==========================================
+
+ const lookupForm = document.querySelector("#lookupForm");
+ const lookupResult = document.querySelector("#lookupResult");
+ const lookupButton = document.querySelector("#lookupButton");
+ const confirmationInput = document.querySelector("#confirmationNumber");
+ 
+ if (lookupForm && lookupResult && confirmationInput) {
+   lookupForm.addEventListener("submit", async (event) => {
+     event.preventDefault();
+ 
+     const confirmationNumber = confirmationInput.value.trim();
+ 
+     lookupResult.textContent = "";
+     lookupResult.className = "";
+ 
+     if (!confirmationNumber) {
+       lookupResult.textContent = "Please enter a confirmation number.";
+       lookupResult.className = "status-rejected";
+       return;
+     }
+ 
+     if (lookupButton) lookupButton.disabled = true;
+     lookupResult.textContent = "Searching for transaction...";
+ 
+     try {
+       const result = await lookupClockIn(confirmationNumber);
+       const transaction = result.transaction;
+ 
+       if (!transaction) {
+         throw new Error("No transaction data was returned.");
+       }
+ 
+       lookupResult.textContent = "";
+ 
+       const fields = [
+         ["Confirmation Number", transaction.confirmationNumber],
+         ["Employee ID", transaction.employeeId],
+         ["Department", transaction.department],
+         ["Clock-In Date", transaction.clockInDate],
+         ["Clock-In Time", transaction.clockInTimestamp],
+         ["Status", transaction.clockInStatus],
+         ["Reason", transaction.statusReason]
+       ];
+ 
+       fields.forEach(([label, value]) => {
+         if (value === undefined || value === null || value === "") {
+           return;
+         }
+ 
+         const line = document.createElement("p");
+         const strong = document.createElement("strong");
+ 
+         strong.textContent = label + ": ";
+         line.appendChild(strong);
+         line.appendChild(document.createTextNode(String(value)));
+ 
+         lookupResult.appendChild(line);
+       });
+ 
+       lookupResult.className = "status-" +
+         String(transaction.clockInStatus || "accepted").toLowerCase();
+ 
+     } catch (error) {
+       lookupResult.textContent = error.message ||
+         "Unable to retrieve the transaction.";
+       lookupResult.className = "status-rejected";
+     } finally {
+       if (lookupButton) lookupButton.disabled = false;
+     }
+   });
+ }
+} 

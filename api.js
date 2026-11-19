@@ -33,4 +33,26 @@ async function submitClockIn(data) {
   } finally {
     if (submitButton) submitButton.disabled = false;
   }
+
+// Retrieve a saved clock-in by confirmation number.
+async function lookupClockIn(confirmationNumber) {
+const url = API_URL + "/" + encodeURIComponent(confirmationNumber);
+
+const response = await fetch(url, {
+  method: "GET",
+  headers: {
+    "Accept": "application/json"
+  }
+});
+
+const result = await response.json();
+
+if (!response.ok) {
+  throw new Error(
+    result.message || "Unable to find this transaction."
+  );
+}
+
+return result;
+}
 }
