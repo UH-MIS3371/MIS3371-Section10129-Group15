@@ -31,6 +31,41 @@ const employees = {
     name: "Sam Patel",
     department: "Prepared Foods",
     status: "Active"
+  },
+  "EMP-40215": {
+    name: "Ava Nguyen",
+    department: "Produce",
+    status: "Active"
+  },
+  "EMP-40388": {
+    name: "Luis Romero",
+    department: "Grocery",
+    status: "Active"
+  },
+  "EMP-40512": {
+    name: "Kayla Brooks",
+    department: "Front End",
+    status: "Active"
+  },
+  "EMP-40637": {
+    name: "Omar Haddad",
+    department: "Prepared Foods",
+    status: "Active"
+  },
+  "EMP-40741": {
+    name: "Grace Kim",
+    department: "Produce",
+    status: "Active"
+  },
+  "EMP-40856": {
+    name: "Tyler Jensen",
+    department: "Grocery",
+    status: "Active"
+  },
+  "EMP-40963": {
+    name: "Nina Alvarez",
+    department: "Front End",
+    status: "Active"
   }
 };
 
