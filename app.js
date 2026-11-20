@@ -473,6 +473,13 @@ function showResult(status, reason, details) {
     timeLine.textContent = "Recorded at: " + details.clockInTimestamp;
     responseMessage.appendChild(timeLine);
   }
+
+  // Show the confirmation number so the employee can look up this clock-in later.
+  if (details && details.confirmationNumber) {
+    const confirmationLine = document.createElement("p");
+    confirmationLine.textContent = "Confirmation Number: " + details.confirmationNumber;
+    responseMessage.appendChild(confirmationLine);
+  }
 }
 
 // ==========================================
@@ -608,4 +615,4 @@ if (form && employeeId) {
      }
    });
  }
-} 
+}
