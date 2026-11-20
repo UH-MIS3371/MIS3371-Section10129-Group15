@@ -10,6 +10,29 @@ const {
   getChicagoTime
 } = require("./index");
 
+// Fake in-memory DynamoDB so tests run without AWS.
+function createFakeDb() {
+  const items = [];
+  return {
+    items,
+    async hasClockInOnDate(employeeId, clockInDate) {
+      return items.some(item =>
+        item.employeeId === employeeId && item.clockInDate === clockInDate);
+    },
+    async saveClockIn(record) {
+      items.push(record);
+    }
+  };
+}
+
+function callHandler(request, db = createFakeDb(), now = NOW) {
+  return handler({ body: JSON.stringify(request) }, {}, { db, now })
+    .then(response => ({
+      statusCode: response.statusCode,
+      body: JSON.parse(response.body)
+    }));
+}
+
 // Fixed test time: 8:00 AM Central, November 2, 2026.
 // This makes timing tests repeatable.
 const NOW = new Date("2026-11-02T14:00:00Z");
@@ -137,16 +160,6 @@ test("Rejected: department mismatch", () => {
   });
 });
 
-test("Rejected: existing open clock-in", () => {
-  expectResult({
-    employeeId: "EMP-30118",
-    department: "Prepared Foods"
-  }, {
-    clockInStatus: "Rejected",
-    statusReason: "Employee already has an open clock-in."
-  });
-});
-
 // Required input and formatting.
 test("HTTP 400: missing employee ID", () => {
   const actual = expectResult({ employeeId: "" }, {
@@ -191,34 +204,125 @@ test("Lambda handler: invalid JSON", async () => {
 });
 
 test("Lambda handler: response format", async () => {
-  const response = await handler({
-    body: JSON.stringify(BASE_REQUEST)
-  });
+  const response = await handler(
+    { body: JSON.stringify(BASE_REQUEST) },
+    {},
+    { db: createFakeDb(), now: NOW }
+  );
 
   assert.equal(response.statusCode, 200);
-  assert.equal(
-    response.headers["Content-Type"],
-    "application/json"
-  );
-  assert.equal(
-    response.headers["Access-Control-Allow-Origin"],
-    "*"
-  );
+  assert.equal(response.headers["Content-Type"], "application/json");
+  assert.equal(response.headers["Access-Control-Allow-Origin"], "*");
 
   const body = JSON.parse(response.body);
 
   for (const field of [
+    "confirmationNumber",
     "clockInStatus",
     "statusReason",
     "minutesFromShiftStart",
     "clockInTimestamp",
     "employeeName"
   ]) {
-    assert.ok(
-      Object.hasOwn(body, field),
-      `Missing response field: ${field}`
-    );
+    assert.ok(Object.hasOwn(body, field), `Missing response field: ${field}`);
   }
+});
+
+// Saving to DynamoDB.
+test("Saved: accepted clock-in returns a confirmation number", async () => {
+  const db = createFakeDb();
+  const { statusCode, body } = await callHandler(BASE_REQUEST, db);
+
+  assert.equal(statusCode, 200);
+  assert.equal(body.clockInStatus, "Accepted");
+  assert.match(body.confirmationNumber, /^HC-20261102-[0-9A-F]{8}$/);
+  assert.equal(db.items.length, 1);
+  assert.equal(db.items[0].confirmationNumber, body.confirmationNumber);
+  assert.equal(db.items[0].clockInDate, "2026-11-02");
+  assert.equal(db.items[0].employeeId, "EMP-10492");
+});
+
+test("Saved: flagged clock-in is saved with its comment", async () => {
+  const db = createFakeDb();
+  const { statusCode, body } = await callHandler(
+    makeRequest({ scheduledShiftStart: "07:30", clockInComment: "Traffic" }),
+    db
+  );
+
+  assert.equal(statusCode, 200);
+  assert.equal(body.clockInStatus, "Flagged");
+  assert.ok(body.confirmationNumber);
+  assert.equal(db.items[0].clockInComment, "Traffic");
+});
+
+test("Confirmation numbers are unique", async () => {
+  const first = await callHandler(BASE_REQUEST);
+  const second = await callHandler(BASE_REQUEST);
+  assert.notEqual(first.body.confirmationNumber, second.body.confirmationNumber);
+});
+
+test("HTTP 400: duplicate clock-in for the same employee and day", async () => {
+  const db = createFakeDb();
+  await callHandler(BASE_REQUEST, db);
+  const { statusCode, body } = await callHandler(BASE_REQUEST, db);
+
+  assert.equal(statusCode, 400);
+  assert.equal(body.clockInStatus, "Rejected");
+  assert.equal(body.statusReason, "Employee already has an open clock-in.");
+  assert.equal(body.confirmationNumber, null);
+  assert.equal(db.items.length, 1);
+});
+
+test("Accepted: same employee may clock in on a different day", async () => {
+  const db = createFakeDb();
+  await callHandler(BASE_REQUEST, db);
+  const nextDay = new Date("2026-11-03T14:00:00Z");
+  const { statusCode } = await callHandler(BASE_REQUEST, db, nextDay);
+  assert.equal(statusCode, 200);
+  assert.equal(db.items.length, 2);
+});
+
+test("HTTP 400: rejected clock-in is not saved", async () => {
+  const db = createFakeDb();
+  const { statusCode, body } = await callHandler(
+    makeRequest({ department: "Produce" }), db);
+
+  assert.equal(statusCode, 400);
+  assert.equal(body.confirmationNumber, null);
+  assert.equal(db.items.length, 0);
+});
+
+test("HTTP 500: database error returns clean JSON", async () => {
+  const brokenDb = {
+    async hasClockInOnDate() { throw new Error("boom"); },
+    async saveClockIn() {}
+  };
+  const originalError = console.error;
+  console.error = () => {};
+  try {
+    const { statusCode, body } = await callHandler(BASE_REQUEST, brokenDb);
+    assert.equal(statusCode, 500);
+    assert.equal(body.clockInStatus, "Rejected");
+  } finally {
+    console.error = originalError;
+  }
+});
+
+// Shifts that cross midnight.
+test("Accepted: 23:55 shift, clock-in at 00:05", () => {
+  const justAfterMidnight = new Date("2026-11-03T06:05:00Z"); // 00:05 Central
+  expectResult({ scheduledShiftStart: "23:55" }, {
+    clockInStatus: "Accepted",
+    minutesFromShiftStart: 10
+  }, justAfterMidnight);
+});
+
+test("Accepted: 00:05 shift, clock-in at 23:55", () => {
+  const justBeforeMidnight = new Date("2026-11-03T05:55:00Z"); // 23:55 Central
+  expectResult({ scheduledShiftStart: "00:05" }, {
+    clockInStatus: "Accepted",
+    minutesFromShiftStart: -10
+  }, justBeforeMidnight);
 });
 
 // Run every test and show the results.
