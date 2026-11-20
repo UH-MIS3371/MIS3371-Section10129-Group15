@@ -1,6 +1,8 @@
 # HALLE Clock-In: Milestone 4 Demo Checklist
 **MIS 3371, Section 10129, Group 15 | Prepared by Leandro Plasencia | Due Sunday, Nov 22, 11:59 PM**
 
+**Live site:** https://main.d1fd7oulthz7lt.amplifyapp.com/
+
 ## Before you hit record
 - [ ] Recording is 5 to 8 minutes, face visible, voice explaining, using the live site. Slides or screenshots alone don't count.
 - [ ] Use only your own two employee IDs. Each ID can clock in once per day, so using someone else's breaks their recording.
