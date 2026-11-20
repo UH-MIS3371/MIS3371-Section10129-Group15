@@ -33,6 +33,7 @@ async function submitClockIn(data) {
   } finally {
     if (submitButton) submitButton.disabled = false;
   }
+}
 
 // Retrieve a saved clock-in by confirmation number.
 async function lookupClockIn(confirmationNumber) {
@@ -54,5 +55,4 @@ if (!response.ok) {
 }
 
 return result;
-}
 }
