@@ -9,6 +9,7 @@
 - [ ] Do a dry run first. If you burn an ID, text Leo to clear your rows before you record.
 - [ ] Have the test matrix (PDF) open in another tab.
 - [ ] Record Saturday or Sunday morning, not Sunday night.
+- [ ] **Make sure Leo's AWS lab is on before you record.** When it's off, the site still loads but every clock-in fails with "Unexpected response from the clock-in service." Text Leo first.
 
 | Name | ID 1 (Accepted) | ID 2 (Flagged) |
 | --- | --- | --- |
